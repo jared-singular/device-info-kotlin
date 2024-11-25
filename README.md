@@ -3,7 +3,7 @@ Device Info Sample App in Kotlin
 
 ## Overview
 
-DeviceInfo is a Kotlin-based singleton class that provides a centralized way to collect crucial Android device data points. This information is essential for maintaining device graphs and processing out-of-app events through Singular's API[1].
+DeviceInfo is a Kotlin-based singleton class that provides a centralized way to collect crucial Android device data points. This information is essential for maintaining device graphs and processing out-of-app events through Singular's API.
 
 ## Key Features
 
@@ -38,18 +38,18 @@ class DeviceInfo private constructor(context: Context) {
 **App Information**
 - `appVersion`: Current application version name
 - `packageName`: Application package identifier
-- `buildVersion`: System build version information[1]
+- `buildVersion`: System build version information
 
 **Device Identifiers**
 - `gaid`: Google Advertising ID
 - `appSetId`: App Set ID for user tracking
 - `androidId`: Android device identifier
-- `deviceModel`: Physical device model information[1]
+- `deviceModel`: Physical device model information
 
 **System Details**
 - `osVersion`: Current Android version
 - `locale`: Device's current locale setting
-- `adTrackingStatus`: Ad tracking authorization status[1]
+- `adTrackingStatus`: Ad tracking authorization status
 
 ## Usage
 
@@ -74,27 +74,32 @@ lifecycleScope.launch {
 2. Collect device information using getAllDeviceInfo()
 3. Send the data to your server
 4. Store the information in your device graph
-5. Use the stored data points when sending event requests to Singular[2]
+5. Use the stored data points when sending event requests to Singular
 
 ## Best Practices
 
 - Store device information server-side for consistent tracking
 - Update device information periodically to maintain accuracy
 - Handle ad tracking status changes appropriately
-- Implement proper error handling for missing data points[3]
+- Implement proper error handling for missing data points
 
 ## Integration with Singular
 
 When sending Server-to-Server events:
 1. Retrieve stored device information from your device graph
 2. Include relevant device data points in your API requests
-3. Maintain data consistency across different events[2]
+3. Maintain data consistency across different events
 
 ## Development and Debugging
 
 The app provides two ways to verify collected data:
 - Logcat output through printDeviceInfo()
-- Visual representation in the DeviceInfo Fragment[3]
+- Visual representation in the DeviceInfo Fragment
+
+## Screenshots ##
+| About the App | DeviceInfo Dictionary |
+|:---:|:---:|
+| ![about-kotlin](https://github.com/user-attachments/assets/fcc900e3-7854-41a1-8c30-542861288101) | ![DeviceInfo-kotlin](https://github.com/user-attachments/assets/0bcaaf3f-3312-48d3-8eb5-7d4abc47b816) |
 
 ## Requirements
 
