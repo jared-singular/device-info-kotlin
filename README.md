@@ -44,6 +44,7 @@ class DeviceInfo private constructor(context: Context) {
 - `gaid`: Google Advertising ID
 - `appSetId`: App Set ID for user tracking
 - `androidId`: Android device identifier
+- `deviceMake`: Physical device manufacture information
 - `deviceModel`: Physical device model information
 
 **System Details**
