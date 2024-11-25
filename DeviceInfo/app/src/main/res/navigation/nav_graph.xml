@@ -1,0 +1,22 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/aboutFragment">
+
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.singular.deviceinfo.kotlin.AboutFragment"
+        android:label="About the App" />
+
+    <fragment
+        android:id="@+id/deviceInfoFragment"
+        android:name="com.singular.deviceinfo.kotlin.DeviceInfoFragment"
+        android:label="Device Info Sample App">
+        <!-- Add action for back navigation -->
+        <action
+            android:id="@+id/action_deviceInfo_to_about"
+            app:destination="@id/aboutFragment"
+            app:popUpTo="@id/aboutFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>
