@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 
 class DeviceInfoFragment : Fragment() {
     private lateinit var deviceInfo: DeviceInfo
+    private lateinit var deviceIdentifiers: DeviceIdentifiers
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -28,7 +29,8 @@ class DeviceInfoFragment : Fragment() {
     ): View {
         // Initialize DeviceInfo
         deviceInfo = DeviceInfo.getInstance(requireContext())
-
+        // Initialize DeviceIdentifiers
+        deviceIdentifiers = DeviceIdentifiers.getInstance(requireContext())
 
         // Create root layout (keep existing layout code...)
         val rootLayout = LinearLayout(requireContext()).apply {
@@ -112,16 +114,17 @@ class DeviceInfoFragment : Fragment() {
         // Launch coroutine to fetch async data
         lifecycleScope.launch {
             deviceInfo.printDeviceInfo()
-            val gaid = deviceInfo.getGaid()
-            val appSetId = deviceInfo.getAppSetId()
+            deviceIdentifiers.printIdentifiers()
 
+            val gaid = deviceIdentifiers.getGaid()
+            val appSetId = deviceIdentifiers.getAppSetId()
             val deviceInfoItems = listOf(
                 "Package Name: ${deviceInfo.packageName}",
                 "App Version: ${deviceInfo.appVersion}",
-                "Ad Tracking: ${deviceInfo.adTrackingStatus}",
+                "Ad Tracking: ${deviceIdentifiers.adTrackingStatus}",
                 "GAID: $gaid",
                 "App Set ID: $appSetId",
-                "AndroidId: ${deviceInfo.androidId}",
+                "AndroidId: ${deviceIdentifiers.androidId}",
                 "Locale: ${deviceInfo.locale}",
                 "Device Make: ${deviceInfo.deviceMake}",
                 "Device Model: ${deviceInfo.deviceModel}",
