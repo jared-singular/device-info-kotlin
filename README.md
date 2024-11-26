@@ -1,97 +1,113 @@
-# device-info-kotlin
-Device Info Sample App in Kotlin
+# Device Info Kotlin Library
 
-## Overview
+A lightweight Kotlin library for collecting essential Android device data points required for maintaining device graphs and processing server-to-server events with Singular's API.
 
-DeviceInfo is a Kotlin-based singleton class that provides a centralized way to collect crucial Android device data points. This information is essential for maintaining device graphs and processing out-of-app events through Singular's API.
-
-## Key Features
-
-- Singleton architecture for consistent device information access
-- Comprehensive device data collection
-- Ad tracking status monitoring
-- System-level information gathering
-- Coroutine support for asynchronous operations
+**TL;DR:**
+- Collect device identifiers and system information using two main classes: `DeviceInfo` and `DeviceIdentifiers`
+- Implements singleton pattern for consistent data access across your app
+- Supports asynchronous operations through Kotlin Coroutines
+- Provides comprehensive device data points required for Singular's REST API
 
 ## Core Components
 
-**DeviceInfo Class**
-```kotlin
-class DeviceInfo private constructor(context: Context) {
-    companion object {
-        @Volatile
-        private var instance: DeviceInfo? = null
-        
-        fun getInstance(context: Context): DeviceInfo {
-            return instance ?: synchronized(this) {
-                instance ?: DeviceInfo(context.applicationContext).also { 
-                    instance = it 
-                }
-            }
-        }
-    }
-}
-```
+### DeviceInfo Class
+Handles collection of device and system-level information:
 
-## Data Points Collected
-
-**App Information**
-- `appVersion`: Current application version name
-- `packageName`: Application package identifier
-- `buildVersion`: System build version information
-
-**Device Identifiers**
-- `gaid`: Google Advertising ID
-- `appSetId`: App Set ID for user tracking
-- `androidId`: Android device identifier
-- `deviceMake`: Physical device manufacture information
-- `deviceModel`: Physical device model information
-
-**System Details**
-- `osVersion`: Current Android version
-- `locale`: Device's current locale setting
-- `adTrackingStatus`: Ad tracking authorization status
-
-## Usage
-
-**Retrieving All Device Information**
 ```kotlin
 val deviceInfo = DeviceInfo.getInstance(context)
+val systemInfo = deviceInfo.getAllDeviceInfo()
+```
+
+**Available Data Points:**
+- `appVersion`: Application version name
+- `packageName`: Application package identifier
+- `osVersion`: Android OS version
+- `locale`: Device locale settings
+- `deviceModel`: Physical device model
+- `deviceMake`: Device manufacturer
+- `buildVersion`: System build information
+
+### DeviceIdentifiers Class
+Manages device identification and tracking-related data:
+
+```kotlin
+val deviceIdentifiers = DeviceIdentifiers.getInstance(context)
 lifecycleScope.launch {
-    val allInfo = deviceInfo.getAllDeviceInfo()
+    val identifiers = deviceIdentifiers.getAllIdentifiers()
 }
 ```
 
-**Debugging Output**
-```kotlin
-lifecycleScope.launch {
-    deviceInfo.printDeviceInfo()
-}
-```
+**Available Identifiers:**
+- `androidId`: Android device identifier
+- `gaid`: Google Advertising ID (requires async call)
+- `appSetId`: App Set ID for user tracking
+- `adTrackingStatus`: Current ad tracking authorization state
 
 ## Implementation Guide
 
-1. Initialize the DeviceInfo singleton
-2. Collect device information using getAllDeviceInfo()
-3. Send the data to your server
-4. Store the information in your device graph
-5. Use the stored data points when sending event requests to Singular
+**1. Initialize Components**
+```kotlin
+val deviceInfo = DeviceInfo.getInstance(context)
+val deviceIdentifiers = DeviceIdentifiers.getInstance(context)
+```
+
+**2. Collect All Data Points**
+```kotlin
+lifecycleScope.launch {
+    val deviceData = deviceInfo.getAllDeviceInfo()
+    val identifiers = deviceIdentifiers.getAllIdentifiers()
+    
+    // Combine data for server upload
+    val serverData = deviceData + identifiers
+}
+```
+
+## Server Integration
+
+### Device Graph Storage
+Store collected data points in your device graph with these key considerations:
+- Map multiple identifiers to a single user profile
+- Update data points periodically to maintain accuracy
+- Handle missing or null values gracefully
+
+### Singular API Integration
+When sending events to Singular's REST API:
+1. Retrieve stored device information from your device graph
+2. Include relevant device data in the API payload
+3. Ensure consistent identifier usage across events
+
+## Technical Requirements
+
+**Android Environment:**
+- Minimum API Level: 21+
+- Kotlin Version: 1.5+
+- Android Studio: Arctic Fox or newer
+
+**Dependencies:**
+- Google Play Services Ads
+- Google Play Services AppSet
+- AndroidX Core KTX
+- Kotlin Coroutines
 
 ## Best Practices
 
-- Store device information server-side for consistent tracking
-- Update device information periodically to maintain accuracy
-- Handle ad tracking status changes appropriately
-- Implement proper error handling for missing data points
+- Cache device information to minimize API calls
+- Implement proper error handling for missing identifiers
+- Monitor ad tracking status changes
+- Update device information periodically
+- Use coroutines for asynchronous operations
+- Implement proper error handling for all data collection methods
 
-## Integration with Singular
+## Debugging
 
-When sending Server-to-Server events:
-1. Retrieve stored device information from your device graph
-2. Include relevant device data points in your API requests
-3. Maintain data consistency across different events
+Debug collected data using built-in logging methods:
 
-## Development and Debugging
+```kotlin
+lifecycleScope.launch {
+    deviceInfo.printDeviceInfo()
+    deviceIdentifiers.printIdentifiers()
+}
+```
 
 The app provides two ways to verify collected data:
 - Logcat output through printDeviceInfo()
@@ -101,19 +117,6 @@ The app provides two ways to verify collected data:
 | About the App | DeviceInfo Dictionary |
 |:---:|:---:|
 | ![about-kotlin](https://github.com/user-attachments/assets/fcc900e3-7854-41a1-8c30-542861288101) | ![DeviceInfo-kotlin](https://github.com/user-attachments/assets/0bcaaf3f-3312-48d3-8eb5-7d4abc47b816) |
-
-## Requirements
-
-- Android API 21+
-- Kotlin 1.5+
-- Android Studio Arctic Fox+
-
-## Dependencies
-
-- Google Play Services Ads
-- Google Play Services AppSet
-- AndroidX Core KTX
-- Kotlin Coroutines
 
 ## License
 [See LICENSE](https://github.com/jared-singular/device-info-kotlin/blob/main/LICENSE)
